@@ -7,3 +7,13 @@ def all_mobiles(request: HttpRequest):
         mobiles = list(models.Mobile.objects.all().values())
         return JsonResponse(mobiles, safe=False)
     return JsonResponse({'error': 'Please use GET method to get all mobiles.'})
+
+def get_mobile(request: HttpRequest, id):
+    if request.method == 'GET':
+        try:
+            mobile = models.Mobile.objects.values().get(pk=id)
+            return JsonResponse(mobile, safe=False)
+
+        except models.Mobile.DoesNotExist:
+            return JsonResponse({'error': 'this object does not exist'})
+    return JsonResponse({'error': 'Please use GET method to get this mobile data.'})
