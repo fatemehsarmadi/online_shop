@@ -5,4 +5,5 @@ app_name = 'products'
 urlpatterns = [
     path('all_mobiles/', views.all_mobiles, name='all_mobiles'),
     re_path(r'^mobile/(?P<id>\d+)/$', views.get_mobile),
+    path('add_mobile/', views.add_new_mobile),
 ]
