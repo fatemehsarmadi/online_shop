@@ -24,7 +24,7 @@ class Mobile(AbstractProductModel):
         ('E', 'eSIM'),
     )
     sim_card_size = models.CharField(max_length=1, choices=SIZE_CHOICES)
-    sim_card_number = models.IntegerField(max_length=1)
+    sim_card_number = models.IntegerField()
 
     chip = models.CharField(max_length=200)
     cpu_type = models.CharField(max_length=200)
