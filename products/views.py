@@ -62,3 +62,23 @@ def add_new_mobile(request: HttpRequest):
         except json.JSONDecodeError:
             return JsonResponse({'error': 'Invalid JSON format.'}, status=400)
     return JsonResponse({'error': 'Please use POST method to add a mobile.'})
+
+@csrf_exempt
+def edit_book(request, id):
+    if request.method == 'PATCH':
+        try:
+            mobile = models.Mobile.objects.get(pk=id)
+            data = json.loads(request.body)
+            for key in data.keys():
+                if key not in models.Mobile._meta.fields:
+                    return JsonResponse({'error': 'this field does not exist and its value cannot be edited'})
+            mobile.__dict__.update(data)
+            mobile.save()
+            return JsonResponse({'message': 'mobile updated successfully!'})
+        
+        except models.Mobile.DoesNotExist:
+            return JsonResponse({'error': 'this object does not exist'})
+        
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON format.'}, status=400)
+    return JsonResponse({'error': 'Please use PATCH method to update a mobile.'})
