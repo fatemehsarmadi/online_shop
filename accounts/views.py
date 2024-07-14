@@ -3,7 +3,7 @@ import json
 from django.contrib.auth.models import User
 import re
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 
 def validate_email(email):
     email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
@@ -83,3 +83,8 @@ def user_login(request):
         else:
             return JsonResponse({'error': 'username or password is wrong'})
     return JsonResponse({'error': 'invalid request method'})
+
+@csrf_exempt
+def user_logout(request):
+    logout(request)
+    return JsonResponse({'message': 'logged out successfully'})
