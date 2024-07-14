@@ -6,5 +6,5 @@ urlpatterns = [
     path('all_mobiles/', views.all_mobiles, name='all_mobiles'),
     re_path(r'^mobile/(?P<id>\d+)/$', views.get_mobile),
     path('add_mobile/', views.add_new_mobile),
-    re_path(r'^edit_mobile/(?P<id>\d+)/$', views.edit_book),
+    re_path(r'^edit_mobile/(?P<id>\d+)/$', views.edit_mobile),
 ]

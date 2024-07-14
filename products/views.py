@@ -64,7 +64,7 @@ def add_new_mobile(request: HttpRequest):
     return JsonResponse({'error': 'Please use POST method to add a mobile.'})
 
 @csrf_exempt
-def edit_book(request, id):
+def edit_mobile(request, id):
     if request.method == 'PATCH':
         try:
             mobile = models.Mobile.objects.get(pk=id)
