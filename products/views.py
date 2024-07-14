@@ -3,6 +3,7 @@ from django.http import HttpRequest, JsonResponse
 from . import models
 import json
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import ProtectedError
 
 
 def all_mobiles(request: HttpRequest):
@@ -82,3 +83,18 @@ def edit_mobile(request, id):
         except json.JSONDecodeError:
             return JsonResponse({'error': 'Invalid JSON format.'}, status=400)
     return JsonResponse({'error': 'Please use PATCH method to update a mobile.'})
+
+@csrf_exempt
+def delete_mobile(request, id):
+    if request.method =='DELETE':
+        try:
+            mobile = models.Mobile.objects.get(pk=id)
+            mobile.delete()
+            return JsonResponse({'message': 'mobile deleted successfully!'})
+
+        except models.Mobile.DoesNotExist:
+            return JsonResponse({'error': 'this object does not exist'})
+
+        except ProtectedError:
+            return JsonResponse({'error': 'this object can\'t be deleted!'})
+    return JsonResponse({'error': request.method})
