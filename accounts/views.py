@@ -3,6 +3,7 @@ import json
 from django.contrib.auth.models import User
 import re
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import authenticate, login
 
 def validate_email(email):
     email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
@@ -47,4 +48,38 @@ def user_register(request):
         new_user.save()
 
         return JsonResponse({'message': 'user created successfully'})
+    return JsonResponse({'error': 'invalid request method'})
+
+@csrf_exempt
+def user_login(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+        errors = {}
+        if 'username' not in data or not data['username']:
+            errors['username'] = 'Username is required'
+
+        if 'password' not in data or not data['password']:
+            errors['password'] = 'Password is required'
+
+        if errors:
+            return JsonResponse(errors, status=400)
+
+        username = data['username']
+        password = data['password']
+        user = authenticate(
+            request,
+            username=username,
+            password=password
+        )
+        if user is not None:
+            login(request, user)
+            return JsonResponse({'message': 'logged in successfully'})
+        
+        else:
+            return JsonResponse({'error': 'username or password is wrong'})
     return JsonResponse({'error': 'invalid request method'})
